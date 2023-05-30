@@ -26,17 +26,19 @@ router.post('/login', [
             const user = await User.findOne({ email, password });
 
             if (!user) {
-                return res.status(500).json({ msg: 'Invalid Credentials!.' });
+                return res.status(500).json({ success: false, msg: 'Invalid Credentials!.' });
             }
 
+            res.status(200).json({ success: true, msg: 'You have login successfully', data: user });
+
         } catch (error) {
-            res.status(500).json({ msg: 'Error finding user : ' + error });
+            res.status(500).json({ success: false, msg: 'Error finding user : ' + error });
         }
 
 
 
     } catch (error) {
-        res.status(500).json({ msg: 'Error finding user : ' + error });
+        res.status(500).json({ success: false, msg: 'Error finding user : ' + error });
     }
 })
 
@@ -62,20 +64,20 @@ router.post('/signup', [
     try {
         const user = await User.findOne(req.email);
         if (user) {
-            return res.status(404).json({ msg: 'You have already signed up.' });
+            return res.status(404).json({ success: false, msg: 'You have already signed up.' });
         }
 
         // POST route to create a new user
         try {
             const { name, surname, email, password, city, state, zip } = req.body;
             const user = await User.create({ name, surname, email, password, city, state, zip });
-            res.status(200).json({ msg: 'You have signed up successfully', data: user });
+            res.status(200).json({ success: true, msg: 'You have signed up successfully', data: user });
         } catch (error) {
-            res.status(500).json({ msg: 'Error creating user : ' + error });
+            res.status(500).json({ success: false, msg: 'Error creating user : ' + error });
         }
 
     } catch (error) {
-        res.status(500).json({ msg: 'Error finding user : ' + error });
+        res.status(500).json({ success: false, msg: 'Error finding user : ' + error });
     }
 
 

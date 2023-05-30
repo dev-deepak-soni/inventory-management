@@ -4,11 +4,13 @@ import * as Yup from 'yup';
 import { APIUrl, postData } from '../config/Fetch';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+// import GoogleButton from 'react-google-button'
+import { GoogleLogin } from '@react-oauth/google';
 
 
 const Login = () => {
-
+    const navigate = useNavigate();
     return (
         <Formik
             initialValues={{ email: '', password: '' }}
@@ -16,7 +18,7 @@ const Login = () => {
                 email: Yup.string().email('Invalid email address').required('Please enter email address.'),
                 password: Yup.string()
                     .max(15, 'Must be 15 characters or less.')
-                    .min(4, 'Must be 4 characters.')
+                    .min(8, 'Must be 8 characters.')
                     .required('Please enter password.')
             })}
             onSubmit={async (values, { setSubmitting }) => {
@@ -24,7 +26,7 @@ const Login = () => {
                 const { email, password } = values;
                 const res = await postData(APIUrl + 'login', { email, password });
                 console.log('res', res);
-                toast.warn(res.error, {
+                toast.warn(res.msg, {
                     position: "top-right",
                     autoClose: 5000,
                     hideProgressBar: false,
@@ -35,6 +37,10 @@ const Login = () => {
                     theme: "colored",
                 });
 
+                if (res.success) {
+                    localStorage.setItem('dashboard-login-alert', true);
+                    navigate('/dashboard');
+                }
 
                 setSubmitting(false);
             }}
@@ -45,18 +51,28 @@ const Login = () => {
                 </div>
                 <div className="font-bold text-lg text-center mt-5">Login Form</div>
                 <div className="flex flex-wrap -mx-3 mb-6 text-center mt-5">
-                    <div className="w-full px-3">
-                        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-password">
-                            Login with Google
-                        </label>
-
-                        <button
-                            className='hidden'
-                            type="button"
-                            id='buttonDiv'
-                        >
-                            Sign In Using Google
-                        </button>
+                    <div className="mx-auto">
+                        <GoogleLogin
+                            onSuccess={async data => {
+                                console.log(data);
+                                try {
+                                    const res = await postData(APIUrl + 'google/verify', { token :  data.credential, clientId : data.clientId, type : 'login'});
+                                    console.log('res',res);
+                                    if(!res.success){
+                                        toast.warn(res.msg);
+                                    }else{
+                                        localStorage.setItem('dashboard-login-alert', true);
+                                        navigate('/dashboard');
+                                    }
+                                } catch (error) {
+                                    toast.warn(error.message);
+                                }
+                                
+                            }}
+                            onError={() => {
+                                console.log('Login Failed');
+                            }}
+                        />
                     </div>
                 </div>
                 <div className="flex flex-wrap -mx-3 mb-6">

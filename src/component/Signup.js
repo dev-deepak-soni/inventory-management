@@ -3,9 +3,11 @@ import * as Yup from 'yup';
 import { APIUrl, postData } from '../config/Fetch';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
 
 const Signup = () => {
+    const navigate = useNavigate();
 
     return (
         <Formik
@@ -46,15 +48,28 @@ const Signup = () => {
 
                 <div className="font-bold text-lg text-center">Signup Form</div>
                 <div className="flex flex-wrap -mx-3 mb-6 text-center mt-5">
-                    <div className="w-full px-3">
+                    <div className="mx-auto">
+                        <GoogleLogin
+                            onSuccess={async data => {
+                                console.log(data);
+                                try {
+                                    const res = await postData(APIUrl + 'google/verify', { token: data.credential, clientId: data.clientId, type : "signup" });
+                                    console.log('res', res);
+                                    if (!res.success) {
+                                        toast.warn(res.msg);
+                                    } else {
+                                        localStorage.setItem('dashboard-login-alert', true);
+                                        navigate('/dashboard');
+                                    }
+                                } catch (error) {
+                                    toast.warn(error.message);
+                                }
 
-                        <button
-                            className='hidden'
-                            type="button"
-                            id='buttonDiv'
-                        >
-                            Sign up Using Google
-                        </button>
+                            }}
+                            onError={() => {
+                                console.log('Login Failed');
+                            }}
+                        />
                     </div>
                 </div>
                 <div className="flex flex-wrap -mx-3 mb-6">

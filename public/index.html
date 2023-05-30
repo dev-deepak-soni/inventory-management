@@ -12,9 +12,9 @@
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <link href="/dist/output.css" rel="stylesheet">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-  <meta name="google-signin-client_id"
+  <!-- <meta name="google-signin-client_id"
     content="94264090123-4ko1o4pup05alu5jekenme53h6iaquue.apps.googleusercontent.com">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script> -->
     <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
@@ -66,22 +66,22 @@
         })
     }
   
-    window.onload = function () {
-      const data = localStorage.getItem('login');
-      if (!data) {
-        $('#buttonDiv').show();
-        google.accounts.id.initialize({
-          client_id: "94264090123-4ko1o4pup05alu5jekenme53h6iaquue.apps.googleusercontent.com",
-          callback: handleCredentialResponse
-        });
-        google.accounts.id.renderButton(
-          document.getElementById("buttonDiv"),
-          { theme: "outline", size: "large" }  // customization attributes
-        );
-        google.accounts.id.prompt(); // also display the One Tap dialog
-      }else{
-        $('#buttonDiv').hide();
-      }
-    }
+    // window.onload = function () {
+    //   const data = localStorage.getItem('login');
+    //   if (!data) {
+    //     $('#buttonDiv').show();
+    //     google.accounts.id.initialize({
+    //       client_id: "94264090123-4ko1o4pup05alu5jekenme53h6iaquue.apps.googleusercontent.com",
+    //       callback: handleCredentialResponse
+    //     });
+    //     google.accounts.id.renderButton(
+    //       document.getElementById("buttonDiv"),
+    //       { theme: "outline", size: "large" }  // customization attributes
+    //     );
+    //     google.accounts.id.prompt(); // also display the One Tap dialog
+    //   }else{
+    //     $('#buttonDiv').hide();
+    //   }
+    // }
   </script>
 </html>
