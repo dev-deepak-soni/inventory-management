@@ -9,6 +9,7 @@ import Login from './component/Login';
 import Signup from './component/Signup';
 import Dashboard from './component/Dashboard';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import Profile from './component/Profile';
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
       {
         path : 'dashboard',
         element : <Dashboard/>
+      },
+      {
+        path : 'profile',
+        element : <Profile/>
       }
     ]
   }

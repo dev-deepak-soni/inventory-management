@@ -26,7 +26,7 @@ const Login = () => {
                 const { email, password } = values;
                 const res = await postData(APIUrl + 'login', { email, password });
                 console.log('res', res);
-                toast.warn(res.msg, {
+                toast.error(res.msg, {
                     position: "top-right",
                     autoClose: 5000,
                     hideProgressBar: false,
@@ -59,7 +59,7 @@ const Login = () => {
                                     const res = await postData(APIUrl + 'google/verify', { token :  data.credential, clientId : data.clientId, type : 'login'});
                                     console.log('res',res);
                                     if(!res.success){
-                                        toast.warn(res.msg);
+                                        toast.error(res.msg);
                                     }else{
                                         localStorage.setItem('dashboard-login-alert', true);
                                         navigate('/dashboard');
